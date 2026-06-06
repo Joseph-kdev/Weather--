@@ -37,7 +37,7 @@ type WeatherRecord = Record<string, unknown>;
 
 export const DEFAULT_DASHBOARD: WeatherDashboard = {
   current: {
-    location: "Kiambu",
+    location: "Unknown",
     temperatureC: 18,
     feelsLikeC: 19,
     humidity: 40,

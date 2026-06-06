@@ -69,7 +69,7 @@ export default function App() {
       <div className="mx-auto w-full max-w-2xl">
         <CurrentWeatherPanel weather={dashboard.current} status={status} />
         <section className="mt-3 grid grid-cols-[1.15fr_0.85fr] gap-2.5">
-          <AiBriefingPanel weatherData={dashboard}/>
+          <AiBriefingPanel weatherData={dashboard} isReal={status}/>
           <DailySummariesPanel summaries={dashboard.dailySummaries} />
         </section>
         <HourlyForecastPanel forecast={dashboard.hourlyForecast} />

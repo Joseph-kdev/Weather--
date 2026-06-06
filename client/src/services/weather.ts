@@ -156,3 +156,45 @@ export async function fetchAiBriefing(
     throw error;
   }
 }
+
+export type WeatherInsight = {
+  risk: "low" | "medium" | "high";
+  title: string;
+  recommendation: string;
+};
+
+export type WeatherInsights = {
+  travel: WeatherInsight;
+  fitness: WeatherInsight;
+  health: WeatherInsight;
+  eventPlanning: WeatherInsight;
+};
+
+export async function fetchInsights(weatherData: WeatherDashboard): Promise<WeatherInsights> {
+  if (!weatherData || Object.keys(weatherData).length === 0) {
+    throw new Error("Weather data is required to generate insights");
+  }
+
+  try {
+    const response = await fetch("/api/weather/ai-insights", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(weatherData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        (errorData as { error?: string }).error || `HTTP ${response.status}: ${response.statusText}`
+      );
+    }
+
+    const insights: WeatherInsights = await response.json();
+    return insights;
+  } catch (error) {
+    console.error("AI Insights service error:", error);
+    throw error;
+  }
+}
