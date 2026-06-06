@@ -3,6 +3,7 @@ import {
   normalizeWeatherPayload,
   type WeatherDashboard
 } from "../lib/weather";
+import { buildApiUrl } from "../lib/config";
 
 type Coordinates = {
   lat: string;
@@ -18,7 +19,8 @@ export async function fetchWeatherDashboard(): Promise<WeatherDashboard> {
   try {
     const resolvedLocation = await resolveLocation();
     const params = new URLSearchParams(resolvedLocation.coordinates);
-    const response = await fetch(`/api/weather?${params.toString()}`);
+    const url = buildApiUrl(`/api/weather?${params.toString()}`);
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error(`Weather request failed: ${response.status}`);
@@ -48,7 +50,8 @@ async function resolveLocation(): Promise<ResolvedLocation> {
     };
   }
 
-  const response = await fetch("/api/location");
+  const url = buildApiUrl("/api/location");
+  const response = await fetch(url);
 
   if (!response.ok) {
     throw new Error(`Location request failed: ${response.status}`);
@@ -83,7 +86,8 @@ function getBrowserLocation(): Promise<Coordinates | null> {
 async function reverseGeocodeLocation(coordinates: Coordinates): Promise<string> {
   try {
     const params = new URLSearchParams(coordinates);
-    const response = await fetch(`/api/reverse-geocode?${params.toString()}`);
+    const url = buildApiUrl(`/api/reverse-geocode?${params.toString()}`);
+    const response = await fetch(url);
 
     if (!response.ok) {
       throw new Error("Reverse geocoding unavailable");
@@ -109,7 +113,8 @@ export async function fetchAiBriefing(
   }
 
   try {
-    const response = await fetch("/api/weather/ai-briefing", {
+    const url = buildApiUrl("/api/weather/ai-briefing");
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -176,7 +181,8 @@ export async function fetchInsights(weatherData: WeatherDashboard): Promise<Weat
   }
 
   try {
-    const response = await fetch("/api/weather/ai-insights", {
+    const url = buildApiUrl("/api/weather/ai-insights");
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
